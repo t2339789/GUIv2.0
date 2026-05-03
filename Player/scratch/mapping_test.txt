@@ -1,0 +1,9 @@
+--- Mapping Test ---
+Found class: ja
+Found class: iu
+Found class: iv
+Found class: iw
+Found class: ix
+Found class: ek
+Found class: bcy
+Found class: ff
