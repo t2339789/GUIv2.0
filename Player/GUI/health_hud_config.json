@@ -1,0 +1,19 @@
+{
+  "fw": 120,
+  "fh": 379,
+  "fshift": 0,
+  "fu1": 0.094,
+  "fv1": 0.039,
+  "fu2": 0.51,
+  "fv2": 0.92,
+  "heartCount": 7,
+  "hw": 52,
+  "hh": 30,
+  "hspacing": 0.088,
+  "hxoffset": 0.018,
+  "hystart": 0.217,
+  "animFps": 10,
+  "billboardScale": 0.003166,
+  "sideOffset": 0.35,
+  "layerNudge": 0.0025
+}
