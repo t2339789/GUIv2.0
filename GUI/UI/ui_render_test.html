@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poltergeist Glass UI</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--cyan:#22d3ee;--cyan2:#06b6d4;--pink:#f472b6;--pink2:#ec4899;--violet:#a78bfa;--purple:#7c3aed;--amber:#fbbf24;--glass:rgba(255,255,255,.07);--line:rgba(226,244,255,.24);--text:rgba(247,252,255,.90);--muted:rgba(218,233,249,.62);--shadow:rgba(2,8,23,.28)}
+    body{min-height:100vh;overflow:hidden;background:#0b1220;font-family:Inter,Segoe UI,Tahoma,sans-serif;color:var(--text);display:grid;place-items:center}
+    .background{position:absolute;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,#182235 0%,#0b1220 58%,#070b12 100%)}
+    .background:before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 24% 24%,rgba(250,204,139,.20),transparent 20%),radial-gradient(circle at 74% 30%,rgba(125,211,252,.16),transparent 25%),radial-gradient(circle at 52% 82%,rgba(30,41,59,.86),transparent 42%);filter:blur(38px)}
+    .background:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.055) 43%,transparent 45% 100%);opacity:.45}
+    .blob{position:absolute;top:-20%;width:2px;height:130px;border-radius:999px;background:linear-gradient(180deg,transparent,rgba(226,244,255,.28),transparent);animation:rain 1.25s linear infinite;opacity:.72}
+    .pink{left:10%;animation-delay:-.2s}
+    .blue{left:34%;animation-delay:-.65s;height:170px;opacity:.55}
+    .purple{left:68%;animation-delay:-1.05s;height:150px;opacity:.62}
+    .rain1{left:22%;animation-delay:-.9s;height:110px}.rain2{left:47%;animation-delay:-.35s;height:155px}.rain3{left:84%;animation-delay:-.75s;height:120px}.rain4{left:58%;animation-delay:-1.15s;height:180px}
+    @keyframes rain{0%{transform:translate3d(70px,-160px,0) rotate(14deg)}100%{transform:translate3d(-120px,760px,0) rotate(14deg)}}
+    .shell{width:560px;height:500px;display:grid;grid-template-columns:190px 1fr;gap:14px;padding:16px;border-radius:30px;background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-top:1px solid rgba(255,255,255,.34);border-left:1px solid rgba(255,255,255,.30);border-right:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 25px 45px rgba(0,0,0,.24),inset 1px 1px 2px rgba(255,255,255,.14)}
+    .nav,.panel{min-width:0;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid var(--line);box-shadow:6px 6px 12px rgba(0,0,0,.16),-6px -6px 12px rgba(255,255,255,.04),inset 1px 1px 2px rgba(255,255,255,.38),inset -1px -1px 2px rgba(0,0,0,.12)}
+    .nav{display:flex;flex-direction:column;padding:13px;gap:11px}
+    .brand{height:44px;display:flex;align-items:center;gap:10px;padding:0 4px}
+    .mark{width:24px;height:24px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--pink2));box-shadow:0 0 18px rgba(34,211,238,.42),inset 1px 1px 2px rgba(255,255,255,.28)}
+    .brand span{font-size:14px;font-weight:600;letter-spacing:.04em}
+    .navlist{display:flex;flex-direction:column;gap:9px;overflow:auto;padding:2px}
+    .navitem{position:relative;border:1px solid rgba(226,244,255,.22);border-radius:18px;padding:10px 42px 10px 12px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.045));color:rgba(237,247,255,.74);cursor:pointer;outline:none;transition:all .30s cubic-bezier(.2,.8,.2,1);box-shadow:6px 6px 12px rgba(0,0,0,.15),-6px -6px 12px rgba(255,255,255,.04),inset 1px 1px 2px rgba(255,255,255,.40),inset -1px -1px 2px rgba(0,0,0,.10)}
+    .navitem:hover{transform:translateY(-3px);color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.065));border-color:rgba(255,255,255,.30);box-shadow:8px 8px 15px rgba(0,0,0,.20),-8px -8px 15px rgba(255,255,255,.06),inset 1px 1px 3px rgba(255,255,255,.50),inset -1px -1px 3px rgba(0,0,0,.10)}
+    .navitem.sel,.navitem:active{transform:translateY(2px) scale(.96);color:var(--cyan);background:rgba(0,0,0,.18);border-color:rgba(0,0,0,.10);box-shadow:inset 6px 6px 10px rgba(0,0,0,.30),inset -6px -6px 10px rgba(255,255,255,.05),0 1px 1px rgba(255,255,255,.20)}
+    .navitem.on .name{color:white}
+    .name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .key{font-size:10px;color:rgba(218,233,249,.72);margin-top:3px}
+    .switch{position:absolute;right:11px;top:50%;width:32px;height:18px;transform:translateY(-50%);border-radius:18px;background:rgba(203,213,225,.28);border:1px solid rgba(226,244,255,.34);box-shadow:inset 2px 2px 5px rgba(0,0,0,.25),0 1px 1px rgba(255,255,255,.18);transition:all .24s cubic-bezier(.2,.8,.2,1)}
+    .switch:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;left:2px;top:2px;background:#f8fafc;transition:all .24s cubic-bezier(.2,.8,.2,1);box-shadow:0 1px 5px rgba(0,0,0,.25)}
+    .navitem.on .switch{background:linear-gradient(135deg,rgba(34,211,238,.56),rgba(167,139,250,.34));border-color:rgba(34,211,238,.72);box-shadow:0 0 14px rgba(34,211,238,.28),inset 2px 2px 5px rgba(0,0,0,.18)}
+    .navitem.on .switch:after{transform:translateX(14px);background:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.75)}
+    .stat{margin-top:auto;border-radius:18px;padding:13px;background:rgba(0,0,0,.16);box-shadow:inset 6px 6px 10px rgba(0,0,0,.27),inset -6px -6px 10px rgba(255,255,255,.045)}
+    .stat label{display:block;font-size:10px;color:rgba(237,247,255,.72);margin-bottom:9px}
+    .statline{height:5px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden}.statfill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:5px;box-shadow:0 0 10px rgba(34,211,238,.35)}
+    .panel{display:flex;flex-direction:column;overflow:hidden}
+    .head{height:62px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.10)}
+    .title{font-size:21px;font-weight:600;letter-spacing:.01em}.badge{font-size:10px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03));color:var(--muted)}
+    .badge.on{color:var(--cyan);border-color:rgba(34,211,238,.52);box-shadow:0 0 18px rgba(34,211,238,.20)}
+    .body{padding:16px;overflow:auto;display:flex;flex-direction:column;gap:13px}
+    .section{border-radius:20px;padding:12px;background:rgba(255,255,255,.075);border:1px solid rgba(226,244,255,.20);box-shadow:inset 1px 1px 2px rgba(255,255,255,.24),inset -1px -1px 2px rgba(0,0,0,.10)}
+    .sec-title{font-size:11px;font-weight:600;color:rgba(237,247,255,.72);margin:0 0 8px 2px}
+    .row{min-height:42px;display:flex;align-items:center;gap:10px;padding:8px 7px;border-radius:15px;transition:all .24s cubic-bezier(.2,.8,.2,1)}
+    .row:hover{background:rgba(255,255,255,.075);transform:translateY(-1px)}
+    .row:active{transform:translateY(1px) scale(.985);background:rgba(0,0,0,.12)}
+    .label{flex:0 0 116px;min-width:0}.label strong{display:block;font-size:12px;font-weight:600;color:rgba(248,252,255,.92)}.label span{display:block;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mini{width:34px;height:18px;border-radius:18px;background:rgba(203,213,225,.30);border:1px solid rgba(226,244,255,.34);position:relative;cursor:pointer;box-shadow:inset 2px 2px 5px rgba(0,0,0,.25),0 1px 1px rgba(255,255,255,.18);transition:all .24s cubic-bezier(.2,.8,.2,1)}
+    .mini:after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#f8fafc;transition:all .24s cubic-bezier(.2,.8,.2,1);box-shadow:0 1px 5px rgba(0,0,0,.25)}
+    .mini.on{background:linear-gradient(135deg,rgba(34,211,238,.56),rgba(167,139,250,.34));border-color:rgba(34,211,238,.62);box-shadow:0 0 14px rgba(34,211,238,.24),inset 2px 2px 5px rgba(0,0,0,.18)}.mini.on:after{transform:translateX(16px);background:var(--cyan);box-shadow:0 0 12px rgba(34,211,238,.70)}
+    .slider{display:flex;align-items:center;gap:8px;flex:1;min-width:0}.track{height:18px;flex:1;padding:7px 0;cursor:pointer}.inner{height:4px;border-radius:4px;background:rgba(255,255,255,.20);position:relative;box-shadow:inset 2px 2px 5px rgba(0,0,0,.18)}.fill{position:absolute;inset:0 auto 0 0;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--pink));box-shadow:0 0 10px rgba(34,211,238,.32)}.thumb{position:absolute;top:-5px;width:14px;height:14px;border-radius:50%;background:white;transform:translateX(-50%);box-shadow:0 0 14px rgba(255,255,255,.45),0 0 12px rgba(34,211,238,.34);transition:transform .18s cubic-bezier(.2,.8,.2,1)}.track:hover .thumb{transform:translateX(-50%) scale(1.12)}.val{width:34px;text-align:right;color:var(--cyan);font-size:10px;font-weight:600;text-shadow:0 0 10px rgba(34,211,238,.35)}
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="blob pink"></div><div class="blob blue"></div><div class="blob purple"></div>
+    <div class="blob rain1"></div><div class="blob rain2"></div><div class="blob rain3"></div><div class="blob rain4"></div>
+  </div>
+  <main class="shell">
+    <aside class="nav"><div class="brand"><div class="mark"></div><span>Poltergeist</span></div><div class="navlist" id="navlist"></div><div class="stat"><label id="statcount">Active modules</label><div class="statline"><div class="statfill" id="statbar"></div></div></div></aside>
+    <section class="panel"><div class="head"><div class="title" id="ptitle">ESP</div><div class="badge on" id="pbadge">ENABLED</div></div><div class="body" id="pbody"></div></section>
+  </main>
+  <script>
+    const D=[
+      {name:"ESP",on:true,key:"F1",sections:[{title:"Rendering",settings:[{t:"bool",n:"Vines",desc:"Render hitbox vines",v:true},{t:"bool",n:"Tracers",desc:"Connect cursor to hitbox center",v:false},{t:"float",n:"Tracer Radius",desc:"Max tracer distance",v:35,min:5,max:200}]}]},
+      {name:"AimAssist",on:false,key:"F3",sections:[{title:"Targeting",settings:[{t:"float",n:"Range",desc:"Max lock distance",v:4,min:1,max:6},{t:"float",n:"FOV",desc:"Aim cone angle",v:25,min:5,max:90},{t:"float",n:"Smoothing",desc:"Correction smoothing",v:60,min:10,max:100},{t:"float",n:"Strength",desc:"Correction intensity",v:.5,min:.1,max:1},{t:"bool",n:"Team Check",desc:"Ignore teammates",v:false},{t:"bool",n:"Require Click",desc:"Only while clicking",v:true},{t:"bool",n:"NPCs",desc:"Include NPC targets",v:false},{t:"bool",n:"Debug",desc:"Show diagnostics",v:false}]}]},
+      {name:"Velocity",on:false,key:"F4",sections:[{title:"Movement",settings:[{t:"float",n:"Horizontal",desc:"Horizontal knockback",v:100,min:0,max:100},{t:"float",n:"Vertical",desc:"Vertical knockback",v:100,min:0,max:100},{t:"bool",n:"Jump Reset",desc:"Reset on jump",v:true},{t:"float",n:"Jump Chance",desc:"Reset probability",v:80,min:0,max:100},{t:"float",n:"Friction",desc:"Ground friction",v:.95,min:.8,max:1},{t:"bool",n:"W-Tap",desc:"Auto tap movement",v:true}]}]},
+      {name:"DiscreetFly",on:false,key:"F6",sections:[{title:"Flight",settings:[{t:"float",n:"Horizontal Speed",desc:"Forward/strafe speed",v:.16,min:.02,max:.6},{t:"float",n:"Vertical Speed",desc:"Rise/fall speed",v:.14,min:.02,max:.6},{t:"float",n:"Glide",desc:"Idle descent",v:.03,min:0,max:.12},{t:"bool",n:"Anti Kick",desc:"Small downward pulse",v:true},{t:"bool",n:"Require Input",desc:"Move only while pressing keys",v:true}]}]},
+      {name:"StrafeAssist",on:false,key:"F5",sections:[{title:"Positioning",settings:[{t:"float",n:"Target Distance",desc:"Preferred range",v:3,min:2,max:5},{t:"float",n:"Strength",desc:"Movement strength",v:.5,min:.1,max:1},{t:"bool",n:"Avoid Holes",desc:"Reverse near holes",v:true}]}]}
+    ];
+    let sel=0; const fmt=v=>Number(v).toFixed(2);
+    function stats(){const n=D.filter(m=>m.on).length;statcount.textContent=`${n} / ${D.length} active`;statbar.style.width=(n/D.length*100)+"%"}
+    function syncBadge(){const m=D[sel];pbadge.textContent=m.on?"ENABLED":"DISABLED";pbadge.className=`badge ${m.on?"on":""}`}
+    function renderNav(){navlist.innerHTML="";D.forEach((m,i)=>{const el=document.createElement("button");el.className=`navitem ${i===sel?"sel":""} ${m.on?"on":""}`;el.innerHTML=`<div class=name>${m.name}</div><div class=key>${m.key}</div><div class=switch></div>`;const sw=el.querySelector(".switch");el.onclick=e=>{const r=sw.getBoundingClientRect();const onSwitch=e.clientX>=r.left-8&&e.clientX<=r.right+8&&e.clientY>=r.top-8&&e.clientY<=r.bottom+8;if(onSwitch){m.on=!m.on;el.classList.toggle("on",m.on);stats();if(i===sel)syncBadge()}else{sel=i;render()}};navlist.appendChild(el)})}
+    function renderPanel(){const m=D[sel];ptitle.textContent=m.name;syncBadge();pbody.innerHTML="";m.sections.forEach((sec,si)=>{const s=document.createElement("div");s.className="section";s.innerHTML=`<div class=sec-title>${sec.title}</div>`;sec.settings.forEach((it,ii)=>{const r=document.createElement("div");r.className="row";if(it.t==="bool"){r.innerHTML=`<div class=label><strong>${it.n}</strong><span>${it.desc}</span></div><div class="mini ${it.v?"on":""}"></div>`;r.onclick=()=>{it.v=!it.v;r.querySelector(".mini").classList.toggle("on",it.v)}}else{const p=(it.v-it.min)/(it.max-it.min)*100;r.innerHTML=`<div class=label><strong>${it.n}</strong><span>${it.desc}</span></div><div class=slider><div class=track><div class=inner><div class=fill style="width:${p}%"></div><div class=thumb style="left:${p}%"></div></div></div><div class=val>${fmt(it.v)}</div></div>`;const tr=r.querySelector(".track");let down=false;const set=x=>{const b=tr.getBoundingClientRect();let p=Math.max(0,Math.min(1,(x-b.left)/b.width));it.v=it.min+p*(it.max-it.min);r.querySelector(".fill").style.width=(p*100)+"%";r.querySelector(".thumb").style.left=(p*100)+"%";r.querySelector(".val").textContent=fmt(it.v)};tr.onmousedown=e=>{down=true;set(e.clientX)};window.addEventListener("mousemove",e=>{if(down)set(e.clientX)});window.addEventListener("mouseup",()=>down=false)}s.appendChild(r)});pbody.appendChild(s)})}
+    function render(){stats();renderNav();renderPanel()} render();
+  </script>
+</body>
+</html>
